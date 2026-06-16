@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '@/features/auth/authStore';
 import { useProtectedRoute } from '@/features/auth/useProtectedRoute';
 import { setupNotificationHandler } from '@/features/notifications/push';
+import { usePushNavigation } from '@/features/notifications/usePushNavigation';
 import { Splash } from '@/components/Splash';
 
 const queryClient = new QueryClient();
@@ -26,6 +27,9 @@ export default function RootLayout() {
 
   // Enforce the auth gate across the whole tree.
   useProtectedRoute();
+
+  // Route "Sorpasso" notification taps to the right leaderboard.
+  usePushNavigation();
 
   return (
     <QueryClientProvider client={queryClient}>

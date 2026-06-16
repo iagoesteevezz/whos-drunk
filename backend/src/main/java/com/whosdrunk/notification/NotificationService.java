@@ -34,12 +34,14 @@ public class NotificationService {
     /**
      * @param actorUserId who just logged a drink
      * @param actorName   their display name (for the copy)
+     * @param leagueId    league the consumption belongs to (for deep-linking)
      * @param seasonId    season being scored
      * @param pointsAdded points the new consumption added
      * @param drinkName   the drink logged (for the copy)
      */
     public void notifyOvertakes(UUID actorUserId,
                                 String actorName,
+                                UUID leagueId,
                                 UUID seasonId,
                                 BigDecimal pointsAdded,
                                 String drinkName) {
@@ -74,6 +76,7 @@ public class NotificationService {
         String body = String.format("%s just stole your spot with a %s! 🍻", actorName, drinkName);
         Map<String, Object> data = Map.of(
                 "type", "OVERTAKE",
+                "leagueId", leagueId.toString(),
                 "seasonId", seasonId.toString(),
                 "byUserId", actorUserId.toString());
 

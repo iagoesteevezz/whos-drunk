@@ -143,7 +143,7 @@ public class ScoringService {
         // the consumption itself.
         try {
             notificationService.notifyOvertakes(
-                    user.getId(), user.getDisplayName(), season.getId(),
+                    user.getId(), user.getDisplayName(), league.getId(), season.getId(),
                     result.points(), drink.getName());
         } catch (Exception ex) {
             log.warn("Could not evaluate overtake notifications: {}", ex.toString());
