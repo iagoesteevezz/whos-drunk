@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: whosdrunk-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/whosdrunk}
+    username: ${DB_USER:whosdrunk}
+    password: ${DB_PASSWORD:whosdrunk}
+  jpa:
+    hibernate:
+      ddl-auto: validate          # el esquema lo gobierna Flyway, no Hibernate
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${PORT:8080}
+
+# Configuración del catálogo externo
+catalog:
+  openfoodfacts:
+    base-url: https://world.openfoodfacts.org
+    user-agent: "WhosDrunk/0.1 (contacto@whosdrunk.app)"   # requerido por OFF
+    timeout-ms: 4000
+  cocktaildb:
+    base-url: https://www.thecocktaildb.com/api/json/v1
+    api-key: ${COCKTAILDB_KEY:1}                            # '1' = key de test
+  cache-ttl-days: 30
+
+app:
+  season:
+    # Monthly rollover: 00:00 on the 1st of each month, in the configured zone.
+    rollover-cron: ${SEASON_ROLLOVER_CRON:0 0 0 1 * *}
+    zone: ${SEASON_ZONE:Europe/Madrid}
+  jwt:
+    # En producción inyecta un secreto de >= 32 bytes vía variable de entorno.
+    secret: ${JWT_SECRET:dev-secret-change-me-please-32bytes-minimum!!}
+    access-ttl-minutes: ${JWT_ACCESS_TTL:30}
+    refresh-ttl-days: ${JWT_REFRESH_TTL:30}
+    issuer: whosdrunk
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      openfoodfacts:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+
+springdoc:
+  swagger-ui:
+    path: /docs
