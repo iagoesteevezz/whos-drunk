@@ -1,24 +1,31 @@
-# Node
-node_modules/
-npm-debug.log
-.env
+# ───────────────────────────────────────────────────────────
+# Root .gitignore — OS / editor cruft + global env safety net.
+# Build artifacts are handled per subproject:
+#   backend/.gitignore  (Maven / Java)
+#   mobile/.gitignore   (Expo / Node)
+# ───────────────────────────────────────────────────────────
 
-# Expo
-.expo/
-dist/
-web-build/
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# Spring Boot / Java
-target/
-*.class
-*.jar
-*.war
-.mvn/
-!/.mvn/wrapper/maven-wrapper.jar
-
-# IDEs
+# Editors / IDEs
 .idea/
 .vscode/
+*.iml
 *.swp
 *.swo
-.DS_Store
+*~
+
+# Logs
+*.log
+
+# Dependencies / build output (global safety net; also covered per subproject)
+node_modules/
+target/
+
+# Environment files — never commit secrets.
+.env
+.env.*
+!.env.example

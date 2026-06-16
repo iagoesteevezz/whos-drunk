@@ -1,0 +1,40 @@
+# ───────────────────────────────────────────────────────────
+# Backend — Spring Boot / Maven / Java
+# ───────────────────────────────────────────────────────────
+
+# Build output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+build/
+out/
+
+# Compiled class files
+*.class
+
+# Java / JVM
+*.log
+hs_err_pid*
+replay_pid*
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+nbproject/
+
+# Environment & local secrets
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.yaml
+application-local.properties
