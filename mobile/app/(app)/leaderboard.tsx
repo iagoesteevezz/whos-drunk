@@ -69,13 +69,22 @@ export default function LeaderboardScreen() {
           entries.length > 0 ? (
             <View style={styles.header}>
               {leagueName ? <Text style={styles.season}>{leagueName} · Season ranking</Text> : null}
-              <Pressable
-                onPress={() =>
-                  router.push({ pathname: '/(app)/hall-of-fame', params: { leagueId, leagueName } })
-                }
-              >
-                <Text style={styles.hofLink}>🏆 Hall of Fame</Text>
-              </Pressable>
+              <View style={styles.navLinks}>
+                <Pressable
+                  onPress={() =>
+                    router.push({ pathname: '/(app)/hall-of-fame', params: { leagueId, leagueName } })
+                  }
+                >
+                  <Text style={styles.hofLink}>🏆 Hall of Fame</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() =>
+                    router.push({ pathname: '/(app)/stats', params: { leagueId, leagueName } })
+                  }
+                >
+                  <Text style={styles.hofLink}>📊 Insights</Text>
+                </Pressable>
+              </View>
               <Podium top={top} currentUserId={currentUserId} />
               {rest.length > 0 ? <Text style={styles.restLabel}>The rest of the pack</Text> : null}
             </View>
@@ -102,6 +111,7 @@ const styles = StyleSheet.create({
   list: { padding: 16, flexGrow: 1, gap: 0 },
   header: { gap: 12, marginBottom: 8 },
   season: { fontSize: 14, fontWeight: '700', color: colors.textMuted, textAlign: 'center' },
+  navLinks: { flexDirection: 'row', justifyContent: 'center', gap: 20 },
   hofLink: { fontSize: 14, fontWeight: '800', color: colors.primary, textAlign: 'center' },
   restLabel: { fontSize: 13, fontWeight: '700', color: colors.textMuted, marginTop: 8 },
   separator: { height: 10 },
