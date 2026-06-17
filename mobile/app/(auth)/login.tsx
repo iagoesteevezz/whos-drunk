@@ -1,29 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'expo-router';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/features/auth/useAuth';
+import { useTranslation } from '@/i18n';
+import { Logo } from '@/components/Logo';
+import { Button } from '@/components/Button';
+import { TextField } from '@/components/TextField';
+import { colors } from '@/theme/colors';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const { login, submitting, error } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const disabled = submitting || !email || !password;
-
-  async function onSubmit() {
-    await login({ email: email.trim(), password });
-    // On success the auth gate redirects into (app); nothing else to do here.
-  }
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -31,21 +23,25 @@ export default function LoginScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}
       >
-        <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>Log in to your leagues</Text>
+        <View style={styles.logo}>
+          <Logo size={1.1} />
+        </View>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
+        <Text style={styles.title}>{t('login.title')}</Text>
+        <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
+
+        <TextField
+          label={t('login.email')}
+          placeholder="you@example.com"
           autoCapitalize="none"
           keyboardType="email-address"
           autoComplete="email"
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
+        <TextField
+          label={t('login.password')}
+          placeholder="••••••••"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -53,22 +49,17 @@ export default function LoginScreen() {
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        <Pressable
-          style={[styles.button, disabled && styles.buttonDisabled]}
+        <Button
+          title={t('login.submit')}
+          loading={submitting}
           disabled={disabled}
-          onPress={onSubmit}
-        >
-          {submitting ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Log in</Text>
-          )}
-        </Pressable>
+          onPress={() => login({ email: email.trim(), password })}
+        />
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>No account yet? </Text>
+          <Text style={styles.footerText}>{t('login.noAccount')}</Text>
           <Link href="/(auth)/register" style={styles.footerLink}>
-            Create one
+            {t('login.create')}
           </Link>
         </View>
       </KeyboardAvoidingView>
@@ -77,29 +68,13 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#fff' },
-  container: { flex: 1, padding: 24, justifyContent: 'center', gap: 12 },
-  title: { fontSize: 30, fontWeight: '800', color: '#111' },
-  subtitle: { fontSize: 16, color: '#666', marginBottom: 12 },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-  },
-  error: { color: '#D7263D', fontSize: 14 },
-  button: {
-    backgroundColor: '#6C4DF6',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: { opacity: 0.5 },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  safe: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, padding: 24, justifyContent: 'center', gap: 14 },
+  logo: { alignItems: 'center', marginBottom: 12 },
+  title: { fontSize: 30, fontWeight: '900', color: colors.text },
+  subtitle: { fontSize: 16, color: colors.textMuted, marginBottom: 8 },
+  error: { color: colors.danger, fontSize: 14 },
   footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 16 },
-  footerText: { color: '#666' },
-  footerLink: { color: '#6C4DF6', fontWeight: '700' },
+  footerText: { color: colors.textMuted },
+  footerLink: { color: colors.primary, fontWeight: '800' },
 });

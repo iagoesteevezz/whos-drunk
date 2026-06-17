@@ -10,19 +10,22 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/features/auth/useAuth';
+import { useTranslation } from '@/i18n';
+import { Logo } from '@/components/Logo';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 import { DateField, formatDate } from '@/components/DateField';
 import { colors } from '@/theme/colors';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const { register, submitting, error } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [birthDate, setBirthDate] = useState<Date | null>(null);
 
-  // 18+ cutoff: the latest date a person can be born and still be an adult today.
+  // 18+ cutoff: the latest birth date that still makes someone an adult today.
   const eighteenYearsAgo = useMemo(() => {
     const d = new Date();
     d.setFullYear(d.getFullYear() - 18);
@@ -32,9 +35,7 @@ export default function RegisterScreen() {
   const isAdult = birthDate ? birthDate <= eighteenYearsAgo : false;
   const disabled =
     submitting || !displayName || !email || password.length < 8 || !birthDate || !isAdult;
-
-  const birthDateError =
-    birthDate && !isAdult ? 'You must be 18 or older to sign up.' : null;
+  const birthDateError = birthDate && !isAdult ? t('register.notAdult') : null;
 
   async function onSubmit() {
     if (!birthDate || !isAdult) return;
@@ -44,7 +45,6 @@ export default function RegisterScreen() {
       password,
       birthDate: formatDate(birthDate),
     });
-    // On success the auth gate redirects into (app).
   }
 
   return (
@@ -54,17 +54,21 @@ export default function RegisterScreen() {
         style={styles.flex}
       >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-          <Text style={styles.title}>Create your account</Text>
-          <Text style={styles.subtitle}>You must be 18 or older to join.</Text>
+          <View style={styles.logo}>
+            <Logo size={0.9} />
+          </View>
+
+          <Text style={styles.title}>{t('register.title')}</Text>
+          <Text style={styles.subtitle}>{t('register.subtitle')}</Text>
 
           <TextField
-            label="Display name"
-            placeholder="How friends will see you"
+            label={t('register.displayName')}
+            placeholder={t('register.displayNamePh')}
             value={displayName}
             onChangeText={setDisplayName}
           />
           <TextField
-            label="Email"
+            label={t('register.email')}
             placeholder="you@example.com"
             autoCapitalize="none"
             keyboardType="email-address"
@@ -73,15 +77,15 @@ export default function RegisterScreen() {
             onChangeText={setEmail}
           />
           <TextField
-            label="Password"
-            placeholder="At least 8 characters"
+            label={t('register.password')}
+            placeholder={t('register.passwordPh')}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
           <DateField
-            label="Birth date"
-            placeholder="Select your birth date"
+            label={t('register.birthDate')}
+            placeholder={t('register.birthDatePh')}
             value={birthDate}
             onChange={setBirthDate}
             maximumDate={eighteenYearsAgo}
@@ -90,12 +94,17 @@ export default function RegisterScreen() {
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Button title="Sign up" loading={submitting} disabled={disabled} onPress={onSubmit} />
+          <Button
+            title={t('register.submit')}
+            loading={submitting}
+            disabled={disabled}
+            onPress={onSubmit}
+          />
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
+            <Text style={styles.footerText}>{t('register.haveAccount')}</Text>
             <Link href="/(auth)/login" style={styles.footerLink}>
-              Log in
+              {t('register.login')}
             </Link>
           </View>
         </ScrollView>
@@ -108,10 +117,11 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   container: { padding: 24, gap: 14, flexGrow: 1, justifyContent: 'center' },
-  title: { fontSize: 28, fontWeight: '800', color: colors.text },
-  subtitle: { fontSize: 15, color: colors.textMuted, marginBottom: 8 },
+  logo: { alignItems: 'center', marginBottom: 8 },
+  title: { fontSize: 28, fontWeight: '900', color: colors.text },
+  subtitle: { fontSize: 15, color: colors.textMuted, marginBottom: 4 },
   error: { color: colors.danger, fontSize: 14 },
   footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 12 },
   footerText: { color: colors.textMuted },
-  footerLink: { color: colors.primary, fontWeight: '700' },
+  footerLink: { color: colors.primary, fontWeight: '800' },
 });

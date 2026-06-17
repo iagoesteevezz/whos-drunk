@@ -12,5 +12,5 @@ export default function Index() {
   if (status === 'loading') {
     return <Splash />;
   }
-  return <Redirect href={status === 'authenticated' ? '/(app)' : '/(auth)/login'} />;
+  return <Redirect href={status === 'authenticated' ? '/(app)' : '/(auth)'} />;
 }

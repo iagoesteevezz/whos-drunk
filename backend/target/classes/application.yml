@@ -3,8 +3,8 @@ spring:
     name: whosdrunk-backend
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/whosdrunk}
-    username: ${DB_USER:whosdrunk}
-    password: ${DB_PASSWORD:whosdrunk}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:1633}
   jpa:
     hibernate:
       ddl-auto: validate          # el esquema lo gobierna Flyway, no Hibernate

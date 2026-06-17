@@ -7,6 +7,7 @@ import { useAuthStore } from '@/features/auth/authStore';
 import { useProtectedRoute } from '@/features/auth/useProtectedRoute';
 import { setupNotificationHandler } from '@/features/notifications/push';
 import { usePushNavigation } from '@/features/notifications/usePushNavigation';
+import { useSettingsStore } from '@/i18n';
 import { Splash } from '@/components/Splash';
 
 const queryClient = new QueryClient();
@@ -14,11 +15,17 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   const status = useAuthStore((s) => s.status);
   const bootstrap = useAuthStore((s) => s.bootstrap);
+  const loadSettings = useSettingsStore((s) => s.load);
 
   // Restore the persisted session once on startup.
   useEffect(() => {
     void bootstrap();
   }, [bootstrap]);
+
+  // Restore saved settings (language + onboarding flag).
+  useEffect(() => {
+    void loadSettings();
+  }, [loadSettings]);
 
   // Configure how push notifications behave in the foreground.
   useEffect(() => {

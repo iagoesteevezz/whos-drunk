@@ -65,6 +65,8 @@ export function DateField({
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             maximumDate={maximumDate}
             onChange={handleChange}
+            themeVariant="light"
+            textColor={colors.text}
           />
           {Platform.OS === 'ios' && (
             <Pressable style={styles.doneButton} onPress={() => setShow(false)}>
